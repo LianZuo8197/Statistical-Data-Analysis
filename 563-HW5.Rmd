@@ -1,0 +1,68 @@
+---
+title: "563-HW5"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = "")
+```
+
+```{r}
+setwd("D:/LianZuo/2022 Fall/STAT 563 - Statistical Data Analysis(Islam)/563-HW")
+dat <- read.table("testscore.txt",header = T)
+attach(dat)
+names(dat)
+head(dat)
+n=nrow(dat) #sample size
+ncol(dat)
+p=5 #number of parameters
+m <- lm(final~exam1+exam2+exam3+homework,data=dat)
+m
+#a
+coef(m)
+#b
+vcov(m)
+#c
+cov(homework,exam2)
+#d
+TSS=with(dat, sum((final-mean(final))^2))
+ESS=sum(resid(m)^2)
+RSS=TSS-ESS
+c(TSS, RSS, ESS)
+dfT=n-1
+dfR=p-1
+dfE=n-p
+list=c(TSS=TSS, RSS=RSS, ESS=ESS, dfT=dfT, dfR=dfR, dfE=dfE)
+print(list)
+#e
+R2.1=1-ESS/TSS
+R2.2=RSS/TSS
+c(R2.1, R2.2)
+MTSS=TSS/dfT
+MRSS=RSS/dfR
+MESS=ESS/dfE
+adjR2=1-MESS/MTSS
+adjR2
+#f
+summary(m)
+summary(m)$r.squared
+summary(m)$adj.r.squared
+#h
+logL=as.numeric(logLik(m))
+AIC1=2*(p-logL)+p/2
+BIC1=(p+1)*log(n)-2*logL
+c(AIC1, BIC1)
+#i
+AIC2=AIC(m)         
+BIC2=BIC(m)    
+c(AIC2, BIC2)
+#h
+F=((TSS-ESS)/(p-1))/(ESS/(n-p))
+F
+# p-value: < 2.2e-16, conclusion in regard to the  rejection of the null hypothesis at α=0.05.
+
+
+```
+

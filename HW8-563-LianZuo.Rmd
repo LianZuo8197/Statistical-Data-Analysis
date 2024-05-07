@@ -1,0 +1,79 @@
+---
+title: "HW8-563-LianZuo"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment="")
+```
+
+
+# Problem 1
+```{r}
+zt.funct<-function(x,y,sigma1,sigma2, alt,alpha){
+mx=mean(x)
+my=mean(y)
+m=length(x);
+n=length(y);
+vars=(sigma1^2/m)+(sigma2^2/n)
+z=(mx-my)/sqrt(vars)
+p<-pnorm(z)
+if (alt== 'l') {pval<-p; cval<-qnorm(alpha, lower.tail = T)}
+else if (alt== 'g') {pval<-(1-p); cval<-qnorm(alpha, lower.tail = F)}
+else if (alt== 't') {pval<-2*pnorm(abs(z),lower.tail=F);cval<- abs(qnorm(alpha/2, lower.tail = F))}
+conclusion=ifelse(pval>alpha,"acpt null", "rejt null")
+out=list(z=z,pvalue=pval,CritcalValue=cval,conclusion=conclusion)
+return(out)}
+
+x<-c(10.6, 16.6, 38.8,  9.7, 30.4, 34.4, 25.7, 30.7, 37.2, 34.6, 27.2, 34.9, 37.7, 38.4, 11.4)
+y<-c(26.9, 22.1,  2.9, 18.6, 28.9, 49.1, 37.2,  4.0, 26.9, 30.1, 10.8, 26.1)
+
+zt.funct(x,y,11.8,14.9,"g",0.05)
+# (i)
+zt.funct(x,y,11.8,14.9,"g",0.03)
+
+# (j)
+library(BSDA)
+BSDA::z.test(x,y,sigma.x=11.8, sigma.y=14.9,conf.level=0.05, alt="g")
+BSDA::z.test(x,y,sigma.x=11.8, sigma.y=14.9,conf.level=0.05, alt="l")
+BSDA::z.test(x,y,sigma.x=11.8, sigma.y=14.9,conf.level=0.05, alt="t")
+
+```
+
+# Problem 2
+```{r}
+
+t.funct<-function(x,y,alt,alpha){
+mx=mean(x)
+my=mean(y)
+n1=length(x);
+n2=length(y);
+df=n1+n2-2;
+var=((n1-1)*var(x)+(n2-1)*var(y))/df
+sp=sqrt(var)
+t=(mx-my)/(sp*sqrt(1/n1+1/n2))
+p<-pt(t,df)
+
+if (alt== 'l') {pval<-p;cval<-qt(alpha,df, lower.tail = T)}
+else if (alt== 'g') {pval<-(1-p);cval<-qt(alpha,df, lower.tail = F)}
+else if (alt== 't') {pval<-2*pt(abs(t),df,lower.tail=F);cval<-qt(alpha/2,df, lower.tail = F)}
+conclusion.pv=ifelse(pval>alpha,"acpt null", "rejt null")
+conclusion.cv=ifelse(abs(t)>abs(cval),"rejt null", "acpt null")
+
+out=list(t=t,df=df,pvalue=pval,CritcalValue=cval,conclusion.cval=conclusion.cv,"Conclusion.pval"=conclusion.pv)
+return(out)}
+x<-scan(text="40 50 54 56 60 43 15 40 19 57 51 43 33 45 40")
+y<-scan(text="33 50 46 41 33 57 25 38 45 30 51 48 24 58 54 49 42 44 40 58")
+t.funct(x,y,"l",0.05)
+t.funct(x,y,"g",0.05)
+t.funct(x,y,"t",0.05)
+#Test using existing R function t.test;
+t.test(x,y,alt="l",var.equal=T);
+t.test(x,y,alt="g",var.equal=T);
+t.test(x,y,alt="t",var.equal=T)
+```
+
+
+

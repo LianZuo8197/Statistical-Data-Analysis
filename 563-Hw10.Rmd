@@ -1,0 +1,119 @@
+---
+title: "563-hw10"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = "")
+```
+
+# Problem 1
+```{r}
+x=scan(text="14.13  3.98  3.01  1.57  6.66 11.60  0.92  2.23  3.71  7.22  6.59  0.26  4.38  1.46  4.52")
+#(a) Solution:
+#[i]
+ks.test(x, 'pexp', 1/2)
+#[ii]
+ks.test(x, 'pexp', 1/4)
+#[iii]
+ks.test(x, 'pgamma', 2, 2)
+#[iv]
+ks.test(x, 'pbeta', 2, 2)
+#[v]
+ks.test(x, 'pnorm', 5, 4)
+
+# (b) On the basis of the tests (i-v) in (a), it is most likely that the given sample comes from the Beta distribution, because the p-values computed from the one from Beta (shape1=2, shape2=2) is lowerest.
+```
+
+
+# Problem 2
+
+```{r}
+#Solution
+x=scan(text="140 225 260 325 186 487 420 220 166 204 481  50  42  65 274  59 258 445 255 270")
+n=length(x)
+y=sort(x)
+#(c): Method 1
+Fn=rank(y)/n
+F0=ppois(y,242)
+Dn=max(abs(Fn-F0))
+Dn
+ef=ecdf(x)
+Fn2=ef(x)
+F02=ppois(x, 242)
+Dn2=max(abs(Fn2-F02))
+c(Dn, Dn2)
+#(d)
+cv=sqrt(-0.5*log(0.1/2))/sqrt(n)
+cv
+
+#(e) 
+c(Dn,cv)
+# Since Dn (0.3931729) > cv (0.2736664), the null hypothesis is rejected, and the alternative hypothesis is accepted.
+
+#(f)
+ks.test(x, 'ppois', 242)
+# Conclusion:The p-value is lower than specified value 0.1, so the null hypothesis is rejected and the alternative hypothesis is accepted.
+    
+#(g) plot of ecdfs
+par(mfcol=c(1,2))
+
+plot(y,Fn, type="s", col="blue", main="Method 1 ECDF Plot")
+lines(y,F0, col="black")
+#Or,
+plot(y,Fn2, type="s", col= "blue", main="Method 2 ECDF Plot")
+lines(y,F0, col="black")
+
+
+
+```
+
+
+# Problem 3
+
+```{r}
+
+x=scan(text="55  81  91 144 150 267 305 314 316 356 378 395 396 409 432 436 473 486 494 498")
+
+y=scan(text="9  34  57  60  64  84 116 123 128 149 174 195 198 232 245 253 262 263 266 286 302 310 411 456 491")
+
+m=length(x)
+n=length(y)
+z=sort(c(x,y))
+# (c): Approach 1
+Fm=c() 
+Gn=c()
+for (i in z){
+Fm=c(Fm, mean(x<=i))
+Gn=c(Gn, mean(y<=i))
+}
+Dmn=max(abs(Fm-Gn))
+# (c): Approach 2
+f2<-ecdf(x)
+g2<-ecdf(y)
+Fm2<-f2(z)
+Gn2<-g2(z)
+Dmn2=max(abs(Fm2-Gn2))
+c(Dmn, Dmn2)
+
+# (d) CV is
+cv=1.36*sqrt((m+n)/(m*n))
+cv
+# (e) Since Dmn>cv, reject the null hypothesis.
+# (f) ks.test for computing test statistic and p-value
+ks.test(x,y,alt="t")
+
+# (g) plots two ecdfs (using Approaches 1 & 2)
+par(mfcol=c(1,2))
+plot(z,Fm, type="s",col="blue", main="Approch 1 EDF Plot")
+lines(z,Gn,col="black",type="s")
+
+plot(z,Fm2, type="s",col="blue", main="Approch 2 EDF Plot")
+lines(z,Gn2,col="black",type="s")
+
+
+
+
+```

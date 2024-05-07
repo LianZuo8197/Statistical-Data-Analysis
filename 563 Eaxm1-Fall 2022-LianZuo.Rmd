@@ -1,0 +1,225 @@
+---
+title: "563-Exam1"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = "")
+```
+
+
+# Problem 1
+```{r}
+x=scan(tex="23.3 28.1 29.2 31.0 32.7 27.7 24.9 35.3 32.8 28.6 26.9 29.3 29.9 30.2 29.5 33.0 32.2 27.0 34.0 30.3")
+
+y=scan(tex="51.1 62.8 61.4 65.7 74.3 56.2 53.8 74.6 70.4 62.5 58.6 65.9 62.2 62.8 60.5 70.2 70.5 59.9 75.7 64.4")
+
+#a
+mx=mean(x)
+my=mean(y)
+n=length(x)
+sx=sqrt(var(x))
+sy=sqrt(var(y))
+rxy=1/(n-1)*sum(((x-mx)/sx)*((y-my)/sy))
+rxy
+
+#b
+cor(x,y,method="pearson")
+
+#c
+## The results in (a) and (b) are equal.
+
+#d
+nu=length(x)
+nv=length(y)
+u=rank(x)
+v=rank(y)
+mu=mean(u)
+mv=mean(v)
+ssdmu=sum((u-mu)^2)
+ssdmv=sum((v-mv)^2)
+r_uv=sum((u-mu)*(v-mv))/sqrt(ssdmu*ssdmv)
+r_uv
+
+#e
+cor(x,y,method="spearman")
+#The computed value agree with the result in (d).
+```
+
+# Problem 2
+```{r}
+# (a) We perform ANOVA test, the test of equality of means of the four different stores groups.
+# (b)
+#Yes, the test require assumptions.ANOVA assuptions are discussed in the class i) HOV ii) Independence of samples, iii) Normality of populations samples come from.
+# (c)
+#Wish test the equality of 4 stores means: $H_0:mu_1=mu_2=...=mu_4$
+#$H_a:$ they are not all equal.
+# (d)
+store1=scan(text="58.75 57.94 58.91 56.85 55.21 57.30")
+store2=scan(text="58.87 56.43 56.51 57.67 59.75 58.48")
+store3=scan(text="59.13 60.38 58.01 59.95 59.51 60.34")
+store4=scan(text="62.32 58.76 60.03 59.36 59.61 61.95")
+n1=length(store1)
+n2=length(store2)
+n3=length(store3)
+n4=length(store4)
+resp<-c(store1,store2,store3,store4)
+store=rep(c("store1","store2","store3","store4"),c(n1,n2,n3,n4))
+dat=data.frame(resp,store)
+res=aov(resp~store,data=dat)
+summary(res)
+
+# (d) Value of the test statistic is F=6.512 with dfs (3,20)  and p-value: 0.00298
+
+# (f) Since p-value is less than the level of significance alpha=0.05, we reject the null hypothesis of equality of the means of calcium contents in the four stores.
+```
+
+# Problem 3
+
+```{r}
+setwd("D:/LianZuo/2022 Fall/STAT 563 - Statistical Data Analysis(Islam)")
+dat3 <- read.csv("fertility.csv")
+head(dat3)
+attach(dat3)
+result <- lm(Fertility~Agriculture+Examination+Education+Catholic+Infant.Mortality,data=dat3)
+summary(result)
+# (a)
+result$coefficients
+# (b)
+vb <- vcov(result)
+vb[3,3]
+vb[3,]
+##(b)	(i) variance of the estimate of coefficient of Examination =0.06445414
+## (ii) covariance between the coefficient of Examination and Agriculture=0.004370871
+# (c)
+anova.table <- anova(result)
+anova.table
+
+# (c)
+y= Fertility
+ybar=mean(y)
+yhat=predict(result)
+SSTO= sum((y-ybar)^2)
+SSTO
+SSE=sum((y-yhat)^2)
+SSE
+SSR=sum((yhat-ybar)^2)
+SSR
+# (d)
+n=length(Fertility)
+MSSTO=SSTO/(n-1)
+MSSTO
+MSE=SSE/(n-4)
+MSE
+MSR=SSR/3
+MSR
+# (e)
+new.x= data.frame(Agriculture=c(30, 45, 60), Examination=c(15,20,25), Education=c(10,15,20), Catholic=c(50,75,100),Infant.Mortality=c(10, 15,20) )
+predict(result,new.x,interval = "confidence",level = 0.9)
+detach(dat3)
+
+```
+
+# Problem 4
+
+```{r}
+SST=153.75
+SSE=27.25
+# (a)
+SSR=SST-SSE
+SSR
+# (b)
+p=4
+n=20
+MSST=SST/(n-1)
+MSST
+MSSE=SSE/(n-p)
+MSSE
+MSSR=SSR/(p-1)
+# (c)
+R_2=1-SSE/SST
+R_2
+AdjR_2=1-(SSE/(n-p))/(SST/(n-1))
+AdjR_2
+
+# (d)
+Fstat=MSSR/MSSE
+Fstat
+
+# (e)
+df1=p-1
+df2=n-p
+pf(Fstat, df1, df2, lower.tail = FALSE)
+
+## Since p-value is less than the level of significance alpha=0.05, we reject the null hypothesis of equality of $ H_0:β_1=β_2=β_3=β_4=0 $.
+```
+
+# Problem5
+```{r}
+w1=scan(text = "133 132 131 127 132 131 129 132 129 131 124 132 130 136 128 132 128 129 133 129 127 129 128 128 126")
+
+w2=scan(text = "134 138 140 130 133 133 142 139 117 129 130 136 123 140 139 145 139 130 140 119 144 128 131 124 140")
+
+w3=scan(text = "135 142 141 134 136 139 152 133 149 143 151 142 148 141 145 138 142 145 132 144 148 134 137 142 135")
+
+w4=scan(text = "155 142 139 142 156 147 154 145 164 142 156 145 141 138 141 147 161 152 123 133 144 153 150 150 149")
+
+w5=scan(text = "168 159 157 151 156 149 154 161 135 161 149 151 150 131 154 162 150 151 54 166 154 164 165 146 154")
+# (a)
+# We perform ANOVA test, the test of equality of means of SBP of patients in the five different groups.
+
+# (b)
+
+n1=length(w1)
+n2=length(w2)
+n3=length(w3)
+n4=length(w4)
+n5=length(w5)
+resp<-c(w1,w2,w3,w4,w5)
+trt=rep(c("w1","w2","w3","w4","w5"),c(n1,n2,n3,n4,n5))
+dat=data.frame(resp,trt)
+
+res=aov(resp~trt,data=dat)
+summary(res)
+# (c)
+# Value of the test statistic is F=13.88 with dfs (4,120)  and p-value: 2.45e-09
+ 
+# (d)
+# Since p-value is less than the level of significance alpha=0.05, we reject the null hypothesis of equality of the means of SBP readings of patients.
+
+```
+# Problem6
+
+```{r}
+# (a)
+
+
+
+
+
+# (b)
+
+setwd("D:/LianZuo/2022 Fall/STAT 563 - Statistical Data Analysis(Islam)")
+dat3 <- read.csv("fertility.csv")
+head(dat3)
+attach(dat3)
+result <- lm(Fertility~Agriculture+Examination+Education+Catholic+Infant.Mortality,data=dat3)
+y= Fertility
+ybar=mean(y)
+yhat=predict(result)
+SSR=sum((yhat-ybar)^2)
+SSTO=sum((y-ybar)^2)
+R.squared=SSR/SSTO
+R.squared
+summary(result)$r.squared
+# Yes, the result in 6(b)support the claim in 6(a).
+
+
+
+
+```
+

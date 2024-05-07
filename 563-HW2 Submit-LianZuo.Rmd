@@ -1,0 +1,82 @@
+---
+title: "563-HW 2 Submit-LianZuo"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment="")
+```
+
+## HW 2: Correlation Analysis
+
+1.Solution:
+
+```{r}
+x=scan(tex="29.0 29.6 35.2 27.4 28.5 32.5 31.2 28.8 27.6 29.9 29.3 27.5 29.7 30.2 31.0 28.9 30.1 30.3 29.1 28.4 31.4 26.5 33.2 32.3 30.7")
+
+y=scan(tex="31.0 32.2 37.4 27.8 30.0 35.0 32.4 30.6 28.2 32.8 31.6 28.0 30.4 32.0 30.8 30.2 31.2 29.8 29.0 33.4 34.6 31.4 28.6 35.4 36.0")
+nu=length(x)
+nv=length(y)
+u=rank(x)
+v=rank(y)
+mu=mean(u)
+mv=mean(v)
+su=sum(u)
+sv=sum(v)
+ssu=sum(u^2)
+ssv=sum(v^2)
+ssdmu=sum((u-mu)^2)
+ssdmv=sum((v-mv)^2)
+##(a)
+c(su,sv,nu*(nu+1)/2,nv*(nv+1)/2)
+##(b)
+c(mu,mv,(nu+1)/2,(nv+1)/2)
+##(c)
+c(ssu,ssv,nu*(nu+1)*(2*nu+1)/6,nv*(nv+1)*(2*nv+1)/6)
+##(d)
+c(ssdmu,ssdmv,nu*(nu^2-1)/12,nv*(nv^2-1)/12)
+##(e)
+c(ssdmu/(nu-1),ssdmv/(nv-1),nu*(nu+1)/12,nv*(nv+1)/12)
+```
+2.Solution:
+
+```{r}
+x=scan(tex="29.0 29.6 35.2 27.4 28.5 32.5 31.2 28.8 27.6 29.9 29.3 27.5 29.7 30.2 31.0 28.9 30.1 30.3 29.1 28.4 31.4 26.5 33.2 32.3 30.7")
+
+y=scan(tex="31.0 32.2 37.4 27.8 30.0 35.0 32.4 30.6 28.2 32.8 31.6 28.0 30.4 32.0 30.8 30.2 31.2 29.8 29.0 33.4 34.6 31.4 28.6 35.4 36.0")
+mx=mean(x)
+my=mean(y)
+##(a)
+r_xy=sum((x-mx)*(y-my))/sqrt(sum((x-mx)^2)*sum((y-my)^2))
+r_xy
+##(b)
+cor(x,y,method="pearson")
+### cor(x,y,method="pearson")=r_xy, so this result agrees with the result in (a)
+##(c)
+nu=length(x)
+nv=length(y)
+u=rank(x)
+v=rank(y)
+mu=mean(u)
+mv=mean(v)
+ssdmu=sum((u-mu)^2)
+ssdmv=sum((v-mv)^2)
+r_uv=sum((u-mu)*(v-mv))/sqrt(ssdmu*ssdmv)
+r_uv
+##(d)
+d=u-v
+n=nu=nv
+r=1-(6*sum(d^2))/(n*(n^2-1))
+r
+### r=r_xy,hence this result agrees with the result in (c).
+##(e)
+cor(x,y,method="spearman")
+### cor(x,y,method="spearman")=r,so this result agrees with the results in (c) and (d).
+```
+
+
+

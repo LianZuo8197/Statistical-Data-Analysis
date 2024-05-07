@@ -1,0 +1,100 @@
+---
+title: "563-HW4b"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = "")
+
+```
+
+
+```{r}
+x <- scan(text=" 2499 2546 1649 1086 1552 2742 1551  688 2290  160")
+y <- scan(text=" 2708 2840 1470 1042 1550 2220 1211  656 1523  225")
+result <- lm(y~x)
+result
+# a
+beta0=coef(result)[1]
+beta1=coef(result)[2]
+c(beta0,beta1)
+
+
+# b
+as.numeric((c(beta0,beta1)))
+yhat=beta0+beta1*x
+
+#c
+exv=sum((yhat-mean(y))^2)
+exv
+
+# d
+totV=sum((y-mean(y))^2)
+totV
+
+# e 
+coD=exv/totV
+coD
+
+# f
+summary(result)
+
+# g
+cor(x,y)
+
+# h
+dat1 <- data.frame(x=c(1500, 2400, 150))
+predict(result,dat1,interval="confidence",level=0.90)
+
+# i
+confint(result,level=0.9)
+
+
+# j
+sum(resid(result))
+sum(resid(result)^2)
+
+# k
+vcov(result)
+
+# l
+plot(resid(result),predict(result))
+
+# m
+n=10
+yhat <- predict(result)
+plot(x,y)
+abline(result)
+for(i in 1:n)
+lines(c(x[i],x[i]),c(y[i],yhat[i]))
+
+
+
+# n
+summary(result)
+
+# o
+residuals <- resid(result)
+boxplot(residuals)
+hist(residuals)
+
+# p
+qqnorm(residuals,ylab="Residuals")
+qqline(residuals)
+
+# q
+library(titanic)
+ AIC(result)
+ BIC(result)
+
+
+
+
+```
+
+
+

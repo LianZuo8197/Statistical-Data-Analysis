@@ -1,0 +1,41 @@
+---
+title: "563-hw9"
+author: "LianZuo"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = "")
+```
+
+# Problem
+
+```{r}
+x1 <- rnorm(12,mean = 10,sd=3)
+x2 <- rnorm(15,mean=8,sd=3)
+alpha=0.05
+n1<-length(x1)
+n2<-length(x2)
+df=n1+n2-2
+x1bar<-mean(x1)
+x2bar<-mean(x2)
+s1sq<-var(x1)
+s2sq<-var(x2)
+spsq <- ((n1-1)*s1sq + (n2-1)*s2sq)/(n1+n2-2)
+sp<-sqrt(spsq)
+me=qt(alpha/2,df,lower.tail = F)*sp*sqrt(1/n1+1/n2)
+ci=c(x1bar - x2bar-me,x1bar - x2bar+me)
+ci
+t.test(x1,x2, var.equal=T,conf.level=0.95)
+
+
+
+
+
+
+
+
+
+```
+
